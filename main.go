@@ -19,6 +19,17 @@ func snippetView(w http.ResponseWriter, r *http.Request) {
 }
 
 func snippetCreate(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" {
+		w.Header().Set("Allow", "POST")
+		w.Header().Set("Cache-Control", "public, max-age=31536000")
+		//Esto es una forma de enviarlo separado
+		// w.WriteHeader(http.StatusMethodNotAllowed)
+		// w.Write([]byte("Method not allowed"))
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		w.Header()["X-XSS-Protection"] = []string{"1; mode=block"}
+
+		return
+	}
 	w.Write([]byte("Create a new snippet..."))
 }
 
